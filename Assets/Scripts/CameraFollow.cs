@@ -8,20 +8,35 @@ public class CameraFollow : MonoBehaviour
     Vector2 ShakeAmount;
     customController player;
     Vector2 currentpos;
+    bool followTarget = true;
+    float speed = 0;
+    float followSpeed = 0;
 
     void Start()
     {
+        followTarget = true;
         player = FindObjectOfType<customController>();
         followPos = player.transform;
         currentpos = transform.position;
+        StartCoroutine(SetSpeed());
+       
     }
 
     void FixedUpdate()
     {
+        if(followTarget)
+        {
+            currentpos = Vector2.Lerp(currentpos, (Vector2)followPos.position + (Vector2.up * 2), followSpeed);
 
-        currentpos = Vector2.Lerp(currentpos, (Vector2)followPos.position + (Vector2.up * 2), 0.1f);
-
-        transform.position = new Vector3(currentpos.x + ShakeAmount.x, currentpos.y + ShakeAmount.y, -10);
+            transform.position = new Vector3(currentpos.x + ShakeAmount.x, currentpos.y + ShakeAmount.y, -10);
+        }
+        else
+        {
+            speed += 0.05f;
+            speed *= 0.98f;
+            transform.Translate(Vector2.down * speed);
+        }
+        
 
        
     }
@@ -53,5 +68,19 @@ public class CameraFollow : MonoBehaviour
         }
         ShakeAmount = Vector2.zero;
 
+    }
+
+    public void nextLevelTransition()
+    {
+        followTarget = false;
+        
+       
+    }
+
+    IEnumerator SetSpeed()
+    {
+        followSpeed = 0.05f;
+        yield return new WaitForSeconds(2);
+        followSpeed = 0.1f;
     }
 }

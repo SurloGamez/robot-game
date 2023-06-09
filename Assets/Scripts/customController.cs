@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class customController : MonoBehaviour
 {
+    public bool inControl = true;
+
     [SerializeField] LayerMask ground;
     [SerializeField] LayerMask hurtLayer;
     [SerializeField] float skinWidth;
@@ -56,6 +58,7 @@ public class customController : MonoBehaviour
     Vector2 RaySpacing;
     BoxCollider2D col;
     Bounds bounds;
+    bool jumpButtonDown;
     bool grounded = false;
     bool walled = false;
     float wallJumpDir = 0;
@@ -69,6 +72,7 @@ public class customController : MonoBehaviour
     bool pauseMovement = false;
     void Start()
     {
+        inControl = true;
         isDead = false;
         pauseMovement = false;
 
@@ -135,7 +139,7 @@ public class customController : MonoBehaviour
             wallJumpcontrolcd = 0;
             wallJumpTimer = 0;
         }
-        if (Input.GetKey(jumpButton) && groundPoundCooldown <= 0 && (jumpCount > 0 || walled) && !jumpPressed && chargeCounter <= 0 && wallJumpTimer <= 0)
+        if (jumpButtonDown && groundPoundCooldown <= 0 && (jumpCount > 0 || walled) && !jumpPressed && chargeCounter <= 0 && wallJumpTimer <= 0)
         {
             if (walled && !grounded)
             {
@@ -203,14 +207,30 @@ public class customController : MonoBehaviour
     {
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
+        if (Input.GetKey(jumpButton))
+        {
+            jumpButtonDown = true;
+        }
+        else
+        {
+            jumpPressed = false;
+            jumpButtonDown = false;
+        }
+        if (Input.GetKey(attackButton) && groundPoundCooldown <= 0) attackButtonCounter += 1; else attackButtonCounter = 0;
 
+        if(!inControl)
+        {
+            input = Vector2.zero;
+            attackButtonCounter = 0;
+            jumpButtonDown = false;
+            chargeCounter = 0;
+        }
+
+
+        //doesnt have to do with player inputs
         if (groundPoundCooldown > 0) input = Vector2.zero;  
 
         if (chargeCounter > 0) input.x = 0;
-
-        if (!Input.GetKey(jumpButton)) jumpPressed = false;
-
-        if (Input.GetKey(attackButton) && groundPoundCooldown <= 0) attackButtonCounter += 1; else attackButtonCounter = 0;
 
         if(wallJumpcontrolcd <= 0)
         {
