@@ -22,18 +22,21 @@ public class elevatorDetect : MonoBehaviour
         anim.SetBool("end door", endDoor);
         cam = FindObjectOfType<CameraFollow>();
         currLevel = SceneManager.GetActiveScene().buildIndex;
-        transform.position += Vector3.forward * 0.5f;
+        
         player = FindObjectOfType<customController>();
 
         if (endDoor)
         {
+            transform.position += Vector3.forward * 0.4f;
             offset = GetComponent<BoxCollider2D>().offset;
             size = GetComponent<BoxCollider2D>().size;
            
         }
         else
         {
-
+            player.inControl = false;
+            transform.position += Vector3.forward * -0.4f;
+            StartCoroutine(openDoor());
         }
 
 
@@ -42,7 +45,11 @@ public class elevatorDetect : MonoBehaviour
    
     void FixedUpdate()
     {
-        checkForPlayer();
+        if(endDoor)
+        {
+            checkForPlayer();
+        }
+       
     }
 
     void checkForPlayer()
@@ -67,7 +74,14 @@ public class elevatorDetect : MonoBehaviour
 
         yield return new WaitForSeconds(1);
         cam.nextLevelTransition();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(currLevel + 1);
+    }
+
+    IEnumerator openDoor()
+    {
+        yield return new WaitForSeconds(2);
+        transform.position += Vector3.forward * 0.5f;
+        player.inControl = true;
     }
 }

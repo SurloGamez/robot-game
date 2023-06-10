@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.SceneManagement;
+
 public class customController : MonoBehaviour
 {
     public bool inControl = true;
@@ -72,7 +74,6 @@ public class customController : MonoBehaviour
     bool pauseMovement = false;
     void Start()
     {
-        inControl = true;
         isDead = false;
         pauseMovement = false;
 
@@ -93,6 +94,11 @@ public class customController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
         GetInput();
 
         grounded = false;
