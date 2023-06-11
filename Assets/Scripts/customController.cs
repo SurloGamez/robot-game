@@ -96,7 +96,7 @@ public class customController : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(0);
         }
 
         GetInput();

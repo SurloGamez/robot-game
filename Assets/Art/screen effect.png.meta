@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3159938f0cc0a60469b37ac3f9873073
+guid: ebc574382fd2bc54fb0aafc6e5fb2d12
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 12
+  spritePixelsToUnits: 10
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -69,7 +69,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 3
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -116,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: elevator simple_0
+      name: screen effect_0
       rect:
         serializedVersion: 2
-        x: 22
-        y: 20
-        width: 55
-        height: 54
+        x: 0
+        y: 0
+        width: 100
+        height: 75
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,20 +130,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 01a9875e3dba54648826b4d37cdac12f
-      internalID: 772370980
+      spriteID: 0335faf602428a74e91e2ccb71f843d0
+      internalID: 1643931425
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: elevator simple_1
+      name: screen effect_1
       rect:
         serializedVersion: 2
-        x: 122
-        y: 20
-        width: 55
-        height: 54
+        x: 100
+        y: 0
+        width: 100
+        height: 75
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,71 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 68d4e572b259f7b45b1b8634d17f2aa0
-      internalID: 244656537
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: elevator simple_2
-      rect:
-        serializedVersion: 2
-        x: 222
-        y: 20
-        width: 55
-        height: 54
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f81e02e5ec5bec642a0d612f66479152
-      internalID: 814298857
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: elevator simple_3
-      rect:
-        serializedVersion: 2
-        x: 322
-        y: 20
-        width: 55
-        height: 54
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e417eba21e56d4149aef3ca2b9101580
-      internalID: 2064477569
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: elevator simple_4
-      rect:
-        serializedVersion: 2
-        x: 422
-        y: 20
-        width: 55
-        height: 54
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 924d9b3e25c1c3645b30d1eb20e0db15
-      internalID: 84587860
+      spriteID: 546435c6369460d44b69bf408a2a06c3
+      internalID: 384792414
       vertices: []
       indices: 
       edges: []
@@ -231,11 +168,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      elevator simple_3: 2064477569
-      elevator simple_0: 772370980
-      elevator simple_4: 84587860
-      elevator simple_1: 244656537
-      elevator simple_2: 814298857
+      screen effect_0: 1643931425
+      screen effect_1: 384792414
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
