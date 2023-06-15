@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class textType : MonoBehaviour
 {
@@ -11,6 +12,18 @@ public class textType : MonoBehaviour
     private void Start()
     {
         StartPos = transform.localPosition;
+        if(type == 1)
+        {
+            GetComponent<TextMeshProUGUI>().color = new Color(0, 0.5f, 1);
+        }
+        if (type == 2)
+        {
+            GetComponent<TextMeshProUGUI>().color = Color.red;
+        }
+        if (type == 3)
+        {
+            GetComponent<TextMeshProUGUI>().color = Color.green;
+        }
     }
     private void FixedUpdate()
     {
@@ -33,8 +46,8 @@ public class textType : MonoBehaviour
         {
             wave += 5;
             float value = Mathf.Sin(wave * Mathf.Deg2Rad);
-            transform.localScale = Vector2.one * (0.3f *  value + 0.7f);
-            transform.localPosition = new Vector2(StartPos.x + (0.3f * -value + 0.7f) * 0.5f, StartPos.y - (0.3f * -value + 0.7f)* 0.5f);
+            transform.localScale = Vector2.one * (0.2f *  value + 0.8f);
+            transform.localPosition = new Vector2(StartPos.x + ((0.2f * -value + 0.8f) * 0.5f), StartPos.y - ((0.2f * -value + 0.6f)* 0.5f));
         }
     }
 }

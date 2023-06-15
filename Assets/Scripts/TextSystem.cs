@@ -9,11 +9,12 @@ public class TextSystem : MonoBehaviour
     [SerializeField] GameObject backdrop;
     [SerializeField] string Test;
     [SerializeField] TextMeshProUGUI ghost;
+    public List<GameObject> toDestroy = new List<GameObject>();
     public Dictionary<string, int> specialChars = new Dictionary<string, int>();
 
     int textType = 0;
     bool doneTyping = false;
-
+    public bool doneWithAll = false;
     float lastpos;
 
 
@@ -35,6 +36,8 @@ public class TextSystem : MonoBehaviour
 
     public void Type(string textInput, Vector2 pos)
     {
+        toDestroy = new List<GameObject>();
+        doneWithAll = false;
         StopAllCoroutines();
 
         lastpos = 0;
@@ -56,10 +59,12 @@ public class TextSystem : MonoBehaviour
         GameObject parent = new GameObject();
         parent.transform.position = new Vector2(pos.x - (width / 2), pos.y);
         parent.transform.SetParent(transform);
+        toDestroy.Add(parent);
 
         GameObject back = Instantiate(backdrop, new Vector2(pos.x - (width / 2), pos.y) + new Vector2(-1, 2.2f), transform.rotation, parent.transform);
         back.transform.GetComponent<SpriteRenderer>().size = new Vector2(width + 2f, 6);
-        
+        toDestroy.Add(back);
+
         StartCoroutine(loopThruSegments(textInput, parent));
     }
 
@@ -74,7 +79,7 @@ public class TextSystem : MonoBehaviour
 
         while(currentIndex < textInput.Length)
         {
-            float wait = 0.01f;
+            float wait = 0.02f;
             string segment = getTextSegment(ref currentIndex, textInput);
 
             if (textType != 0) wait = 0.05f;
@@ -82,6 +87,7 @@ public class TextSystem : MonoBehaviour
             StartCoroutine(IEType(segment, parent, new Vector2(lastpos, 0), wait));
             yield return new WaitUntil(() => doneTyping);
         }
+        doneWithAll = true;
        
     }
 
@@ -153,5 +159,13 @@ public class TextSystem : MonoBehaviour
         lastpos += text.textInfo.characterInfo[text.textInfo.characterCount - 1].topRight.x; //local position
 
         if (textInput == " ") { lastpos += 0.3f; }
+    }
+
+    public void DestroyAll()
+    {
+        for(int i = 0; i < toDestroy.Count; i++)
+        {
+            Destroy(toDestroy[i]);
+        }
     }
 }
