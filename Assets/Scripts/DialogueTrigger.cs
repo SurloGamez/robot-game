@@ -8,6 +8,7 @@ public class DialogueTrigger : MonoBehaviour
     Vector2 offset;
     [SerializeField] LayerMask PlayerLayer;
     [SerializeField] dialogues[] Dialogues;
+    [SerializeField] faceFollow mustache;
     customController player;
     Transform spawnpos;
     TextSystem tsystem;
@@ -43,14 +44,18 @@ public class DialogueTrigger : MonoBehaviour
     IEnumerator StartDialogue()
     {
         player.inControl = false;
+       
         for(int i = 0; i < Dialogues.Length; i++)
         {
+            if(mustache)mustache.isTalking = true;
             tsystem.Type(Dialogues[i].text, spawnpos.transform.position);
             yield return new WaitUntil(() => tsystem.doneWithAll);
+            if (mustache) mustache.isTalking = false;
             yield return new WaitForSeconds(Dialogues[i].wait);
             tsystem.DestroyAll();
         }
         player.inControl = true;
+        
     }
 
 

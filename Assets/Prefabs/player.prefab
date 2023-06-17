@@ -127,6 +127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inControl: 1
+  cameraLockLayer:
+    serializedVersion: 2
+    m_Bits: 32768
   ground:
     serializedVersion: 2
     m_Bits: 128

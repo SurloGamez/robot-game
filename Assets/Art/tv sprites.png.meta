@@ -144,8 +144,8 @@ TextureImporter:
         y: 0
         width: 100
         height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.49066284, y: 0.49377537}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -183,11 +183,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 300
-        y: 0
+        y: 31
         width: 100
-        height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        height: 44
+      alignment: 9
+      pivot: {x: 0.48579285, y: 0.12598453}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -195,6 +195,27 @@ TextureImporter:
       bones: []
       spriteID: 865df45de869d304aa4c965736bf81cb
       internalID: -1649025481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tv sprites_4
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 6
+        width: 100
+        height: 25
+      alignment: 9
+      pivot: {x: 0.48934478, y: 0.8954338}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e170eea412863c418109d41242b5827
+      internalID: -1389122865
       vertices: []
       indices: 
       edges: []
@@ -211,6 +232,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       tv sprites_0: 1264340678
+      tv sprites_4: -1389122865
       tv sprites_3: -1649025481
       tv sprites_2: 1415079649
       tv sprites_1: -1041043841

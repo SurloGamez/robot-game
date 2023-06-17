@@ -4,31 +4,55 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    Transform followPos;
+    public Vector2 followPos;
+    public float targetZoomAmount;
+    public bool inLock = false;
     Vector2 ShakeAmount;
     customController player;
     Vector2 currentpos;
+    float currentsize;
     bool followTarget = true;
     float speed = 0;
     float followSpeed = 0;
+    [SerializeField] LayerMask cameraLockLayer;
+
+    Camera cam;
 
     void Start()
     {
+        cam = GetComponent<Camera>();
         followTarget = true;
         player = FindObjectOfType<customController>();
-        followPos = player.transform;
+        targetZoomAmount = 15;
+        currentsize = targetZoomAmount;
         currentpos = transform.position;
+        followPos = player.transform.position;
+        cam.orthographicSize = currentsize;
         StartCoroutine(SetSpeed());
        
     }
 
     void FixedUpdate()
     {
-        if(followTarget)
+        if(!inLock)
         {
-            currentpos = Vector2.Lerp(currentpos, (Vector2)followPos.position + (Vector2.up * 2), followSpeed);
+            followPos = player.transform.position;
+            targetZoomAmount = 15;
+        }
+        
+        follow();
 
+    }
+
+    void follow()
+    {
+        currentsize = Mathf.Lerp(currentsize, targetZoomAmount, followSpeed);
+        if (followTarget)
+        {
+            currentpos = Vector2.Lerp(currentpos, (Vector2)followPos + (Vector2.up * 2), followSpeed);
             transform.position = new Vector3(currentpos.x + ShakeAmount.x, currentpos.y + ShakeAmount.y, -10);
+            
+
         }
         else
         {
@@ -36,9 +60,18 @@ public class CameraFollow : MonoBehaviour
             speed *= 0.98f;
             transform.Translate(Vector2.down * speed);
         }
-        
+        cam.orthographicSize = currentsize;
+    }
 
-       
+    void checkCameraLocks()
+    {
+        Collider2D hit = Physics2D.OverlapBox(transform.position, Vector2.one, 0, cameraLockLayer);
+        if (!hit) return;
+        BoxCollider2D box = hit.gameObject.GetComponent<BoxCollider2D>();
+        Vector2 size = box.size;
+        Vector2 pos = box.offset + (Vector2)hit.gameObject.transform.position;
+        followPos = pos;
+
     }
 
 
@@ -73,8 +106,6 @@ public class CameraFollow : MonoBehaviour
     public void nextLevelTransition()
     {
         followTarget = false;
-        
-       
     }
 
     IEnumerator SetSpeed()

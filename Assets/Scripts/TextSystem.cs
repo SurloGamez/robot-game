@@ -28,10 +28,10 @@ public class TextSystem : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Type(Test, new Vector2(10, 5));
-        }
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Type(Test, new Vector2(10, 5));
+        //}
     }
 
     public void Type(string textInput, Vector2 pos)

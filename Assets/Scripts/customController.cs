@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class customController : MonoBehaviour
 {
     public bool inControl = true;
-
+    [SerializeField] LayerMask cameraLockLayer;
     [SerializeField] LayerMask ground;
     [SerializeField] LayerMask hurtLayer;
     [SerializeField] float skinWidth;
@@ -163,6 +163,8 @@ public class customController : MonoBehaviour
 
             if (jumpCount == 0) rolling = true; // jumpcount has to be EXACTLY 0
         }
+
+        checkCameraLocks();
 
         CheckAttack();
         UpdateUI();
@@ -569,5 +571,18 @@ public class customController : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
       
+    }
+    //block (3.5, 2) = camera 1
+    void checkCameraLocks()
+    {
+        cam.inLock = false;
+        Collider2D hit = Physics2D.OverlapBox(transform.position, Vector2.one, 0, cameraLockLayer);
+        if (!hit) return;
+        BoxCollider2D box = hit.gameObject.GetComponent<BoxCollider2D>();
+        Vector2 size = box.size;
+        Vector2 pos = box.offset + (Vector2)hit.gameObject.transform.position;
+        cam.followPos = pos;
+        cam.targetZoomAmount = size.x / 3.5f;
+        cam.inLock = true;
     }
 }
