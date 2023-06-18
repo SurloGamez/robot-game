@@ -70,6 +70,8 @@ public class customController : MonoBehaviour
     float groundPoundCooldown = 0; //this is the time it takes to exit the iron man position
     float wallJumpcontrolcd = 0; //time it takes to gain control over player again
     float wallJumpTimer = 0; //time is takes to wall jump again
+    bool wallSliding = false;
+    bool inwalljumpanimation = false;
 
     bool pauseMovement = false;
     void Start()
@@ -144,16 +146,26 @@ public class customController : MonoBehaviour
             rolling = false;
             wallJumpcontrolcd = 0;
             wallJumpTimer = 0;
+
+            wallSliding = false;
+            inwalljumpanimation = false;
         }
+
+        if(walled && !walljumped && !grounded && velocity.y <= 0) //wall sliding
+        {
+            wallSliding = true;
+        }
+
         if (jumpButtonDown && groundPoundCooldown <= 0 && (jumpCount > 0 || walled) && !jumpPressed && chargeCounter <= 0 && wallJumpTimer <= 0)
         {
-            if (walled && !grounded)
+            if (walled && !grounded) // wall jump
             {
                 smoothInput.x = wallJumpDir * 5;
                 jumpCount = 1;
                 walljumped = true;
                 wallJumpcontrolcd = 1;
                 wallJumpTimer = 0.5f;
+                inwalljumpanimation = true;
             }
 
             jumpPressed = true;
@@ -164,6 +176,8 @@ public class customController : MonoBehaviour
             if (jumpCount == 0) rolling = true; // jumpcount has to be EXACTLY 0
         }
 
+        if (wallSliding) rolling = false;
+
         checkCameraLocks();
 
         CheckAttack();
@@ -173,7 +187,7 @@ public class customController : MonoBehaviour
         anim.UpdateAnimation(
             Mathf.Abs(velocity.x) > 0.05f
             ,grounded 
-            ,velocity.y > 0.1f && chargeCounter <= 0
+            ,velocity.y > 0.1f && chargeCounter <= 0 && !walljumped
             ,velocity.y < -0.1f && chargeCounter <= 0
             ,rolling
             ,attackButtonCounter == 1 && chargeCounter > 0
@@ -183,6 +197,7 @@ public class customController : MonoBehaviour
             ,walljumped
             ,walled && !walljumped && !grounded && velocity.y <= 0
             ,chargeCounter > 0
+            ,inwalljumpanimation
             );
     }
 
@@ -476,15 +491,16 @@ public class customController : MonoBehaviour
         walled = false;
 
         RaycastHit2D topleft = Physics2D.Raycast(origins.tl, Vector2.left, 0.05f, ground);
-        RaycastHit2D bottomleft = Physics2D.Raycast(origins.bl, Vector2.left, 0.05f, ground);
+        //RaycastHit2D bottomleft = Physics2D.Raycast(origins.bl, Vector2.left, 0.05f, ground);
         RaycastHit2D topright = Physics2D.Raycast(origins.tr, Vector2.right, 0.05f, ground);
-        RaycastHit2D bottomright = Physics2D.Raycast(origins.br, Vector2.right, 0.05f, ground);
+       // RaycastHit2D bottomright = Physics2D.Raycast(origins.br, Vector2.right, 0.05f, ground);
 
-        if (topleft || bottomleft) { wallJumpDir = 1; walled = true; }
-        else if (topright || bottomright) { wallJumpDir = -1; walled = true; }
+        if (topleft && Mathf.Abs(topleft.normal.y) <= 0.05f /*|| bottomleft*/) { wallJumpDir = 1; walled = true; }
+        else if (topright && Mathf.Abs(topright.normal.y) <= 0.05f /*|| bottomright*/) { wallJumpDir = -1; walled = true; }
 
         if (walled && wallJumpDir == input.x)
         {
+            
             walled = false;
             rolling = false;
         }

@@ -11,7 +11,7 @@ public class p_animationController : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    public void UpdateAnimation(bool run, bool grounded, bool jumptrig, bool fall, bool roll, bool attacktrig, float xdir, float ydir, bool attackend, bool walljump, bool wallSlide, bool attacking)
+    public void UpdateAnimation(bool run, bool grounded, bool jumptrig, bool fall, bool roll, bool attacktrig, float xdir, float ydir, bool attackend, bool walljump, bool wallSlide, bool attacking, bool inwalljumpanimation)
     {
         anim.SetBool("roll", roll);
         anim.SetBool("run", run);
@@ -30,6 +30,8 @@ public class p_animationController : MonoBehaviour
         anim.SetBool("wallSlide", wallSlide);
 
         anim.SetBool("attacking", attacking);
+
+        anim.SetBool("inwalljumpanimation", inwalljumpanimation);
     }
 
     public void Reset()
