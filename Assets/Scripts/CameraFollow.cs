@@ -63,17 +63,6 @@ public class CameraFollow : MonoBehaviour
         cam.orthographicSize = currentsize;
     }
 
-    void checkCameraLocks()
-    {
-        Collider2D hit = Physics2D.OverlapBox(transform.position, Vector2.one, 0, cameraLockLayer);
-        if (!hit) return;
-        BoxCollider2D box = hit.gameObject.GetComponent<BoxCollider2D>();
-        Vector2 size = box.size;
-        Vector2 pos = box.offset + (Vector2)hit.gameObject.transform.position;
-        followPos = pos;
-
-    }
-
 
     public void CameraShake()
     {

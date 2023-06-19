@@ -31,6 +31,7 @@ public class customController : MonoBehaviour
 
     CameraFollow cam;
     CheckPointSystem CPsystem;
+    Vector2 respawnPos;
 
     KeyCode attackButton;
     KeyCode jumpButton;
@@ -82,7 +83,7 @@ public class customController : MonoBehaviour
         cam = FindObjectOfType<CameraFollow>();
         anim = GetComponent<p_animationController>();
         sr = GetComponent<SpriteRenderer>();
-        CPsystem = FindObjectOfType<CheckPointSystem>();
+        //CPsystem = FindObjectOfType<CheckPointSystem>();
         attackButton = KeyCode.X;
         jumpButton = KeyCode.Z;
 
@@ -90,6 +91,7 @@ public class customController : MonoBehaviour
         GetOrigins(Vector2.zero);
         CalculateRaySpacing();
 
+        respawnPos = transform.position;
       
     }
 
@@ -490,9 +492,9 @@ public class customController : MonoBehaviour
     {
         walled = false;
 
-        RaycastHit2D topleft = Physics2D.Raycast(origins.tl, Vector2.left, 0.05f, ground);
+        RaycastHit2D topleft = Physics2D.Raycast((origins.tl + origins.bl) * 0.5f, Vector2.left, 0.05f, ground);
         //RaycastHit2D bottomleft = Physics2D.Raycast(origins.bl, Vector2.left, 0.05f, ground);
-        RaycastHit2D topright = Physics2D.Raycast(origins.tr, Vector2.right, 0.05f, ground);
+        RaycastHit2D topright = Physics2D.Raycast((origins.tr + origins.br) *0.5f, Vector2.right, 0.05f, ground);
        // RaycastHit2D bottomright = Physics2D.Raycast(origins.br, Vector2.right, 0.05f, ground);
 
         if (topleft && Mathf.Abs(topleft.normal.y) <= 0.05f /*|| bottomleft*/) { wallJumpDir = 1; walled = true; }
@@ -543,7 +545,7 @@ public class customController : MonoBehaviour
             GameObject limbsPre = Instantiate(limbs, transform.position, transform.rotation);
             Destroy(explosionPre, 0.9f);
             Destroy(limbsPre, 3);
-            StartCoroutine(waitToRespawn(CPsystem.currentCheckpointPos));
+            StartCoroutine(waitToRespawn(respawnPos));
         }
     }
 
