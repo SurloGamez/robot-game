@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: 0, y: 0.5}
   YvelRange: {x: 0, y: 0.5}
 --- !u!1 &5321540150996798147
 GameObject:
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: -0.5, y: 0}
   YvelRange: {x: 0, y: 0.5}
 --- !u!1 &5321540151342796941
 GameObject:
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: 0, y: 0.5}
   YvelRange: {x: 0, y: 0.5}
 --- !u!1 &5321540152069284031
 GameObject:
@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: -0.5, y: 0}
   YvelRange: {x: 0, y: 0.5}
 --- !u!1 &5321540152076198698
 GameObject:
@@ -531,7 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: -0.5, y: 0}
   YvelRange: {x: 0, y: 0.5}
 --- !u!1 &5321540152635661760
 GameObject:
@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: 0, y: 0.5}
   YvelRange: {x: 0, y: 0.5}
 --- !u!1 &5321540152700730273
 GameObject:
@@ -729,5 +729,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a9dc9127e7d824f83708aa6ac2f229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XvelRange: {x: -0.5, y: 0.5}
+  XvelRange: {x: -0.5, y: 0}
   YvelRange: {x: 0, y: 0.5}

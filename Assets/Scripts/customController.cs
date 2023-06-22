@@ -190,7 +190,7 @@ public class customController : MonoBehaviour
             Mathf.Abs(velocity.x) > 0.05f
             ,grounded 
             ,velocity.y > 0.1f && chargeCounter <= 0 && !walljumped
-            ,velocity.y < -0.1f && chargeCounter <= 0
+            ,velocity.y < -0.2f && chargeCounter <= 0
             ,rolling
             ,attackButtonCounter == 1 && chargeCounter > 0
             ,chargeDir.x 

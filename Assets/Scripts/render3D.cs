@@ -75,9 +75,10 @@ public class render3D : MonoBehaviour
             
 
         }
-
+        //box collider first
         setCol.AutoSetColliders(main);
       
+        //then stairs
         EdgeCollider2D[] Ecols = main.transform.GetComponentsInChildren<EdgeCollider2D>();
         foreach (EdgeCollider2D col in Ecols)
         {
