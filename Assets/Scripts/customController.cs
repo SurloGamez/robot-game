@@ -338,7 +338,6 @@ public class customController : MonoBehaviour
 
                 velocity = chargeDir * chargeVelocity;
                 chargeCounter -= 1;
-                /*if(chargeVelocity >= 0.3f)*/
                 chargeVelocity *= 0.95f;
             }
 
@@ -472,7 +471,7 @@ public class customController : MonoBehaviour
 
                     }
 
-                    if (slopeAngle <= 80)
+                    if (slopeAngle <= 80 && chargeCounter <= 0)
                     {
                         float dist2Slope = hit.distance - skinWidth;
                         velocity.x -= dist2Slope * dir;
