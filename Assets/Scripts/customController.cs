@@ -75,6 +75,8 @@ public class customController : MonoBehaviour
     bool inwalljumpanimation = false;
 
     bool pauseMovement = false;
+
+    int j, k = 0;
     void Start()
     {
         isDead = false;
@@ -592,14 +594,30 @@ public class customController : MonoBehaviour
     //block (3.5, 2) = camera 1
     void checkCameraLocks()
     {
-        cam.inLock = false;
         Collider2D hit = Physics2D.OverlapBox(transform.position, Vector2.one, 0, cameraLockLayer);
-        if (!hit) return;
-        BoxCollider2D box = hit.gameObject.GetComponent<BoxCollider2D>();
-        Vector2 size = box.size;
-        Vector2 pos = box.offset + (Vector2)hit.gameObject.transform.position;
-        cam.followPos = pos;
-        cam.targetZoomAmount = size.x / 3.5f;
-        cam.inLock = true;
+        if (!hit)
+        {
+            j++;
+            k = 0;
+            if (j == 1) cam.inLock = false;
+
+            
+        }
+        else
+        {
+            j = 0;
+            k++;
+            if (k == 1)
+            {
+                BoxCollider2D box = hit.gameObject.GetComponent<BoxCollider2D>();
+                Vector2 size = box.size;
+                Vector2 pos = box.offset + (Vector2)hit.gameObject.transform.position;
+                cam.followPos = pos;
+                cam.targetZoomAmount = size.x / 3.5f;
+                cam.inLock = true;
+            }
+        }
+        
+       
     }
 }

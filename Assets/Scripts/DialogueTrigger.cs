@@ -10,18 +10,21 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] dialogues[] Dialogues;
     [SerializeField] faceFollow mustache;
     customController player;
-    Transform spawnpos;
+    CameraFollow cam;
+    Vector3 spawnpos;
+    Vector2 Camlock;
     TextSystem tsystem;
     bool used = false;
 
 
 
-    void Start()
-    {
+    void Start() { 
+        cam = FindObjectOfType<CameraFollow>();
         bounds = GetComponent<BoxCollider2D>().bounds;
         offset = GetComponent<BoxCollider2D>().offset;
         tsystem = FindObjectOfType<TextSystem>();
-        spawnpos = transform.GetChild(0);
+        spawnpos = transform.GetChild(0).position;
+        Camlock = transform.GetChild(1).position;
         player = FindObjectOfType<customController>();
     }
 
@@ -44,18 +47,20 @@ public class DialogueTrigger : MonoBehaviour
     IEnumerator StartDialogue()
     {
         player.inControl = false;
-       
+        cam.inLock = true;
+        cam.targetZoomAmount = 15;
+        cam.followPos = Camlock;
         for(int i = 0; i < Dialogues.Length; i++)
         {
             if(mustache)mustache.isTalking = true;
-            tsystem.Type(Dialogues[i].text, spawnpos.transform.position);
+            tsystem.Type(Dialogues[i].text, spawnpos);
             yield return new WaitUntil(() => tsystem.doneWithAll);
             if (mustache) mustache.isTalking = false;
             yield return new WaitForSeconds(Dialogues[i].wait);
             tsystem.DestroyAll();
         }
         player.inControl = true;
-        
+        cam.inLock = false;
     }
 
 

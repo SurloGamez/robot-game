@@ -22,7 +22,7 @@ public class textType : MonoBehaviour
         }
         if (type == 3)
         {
-            GetComponent<TextMeshProUGUI>().color = Color.green;
+            GetComponent<TextMeshProUGUI>().color = new Color(1, 0.5f, 0.2f);
         }
     }
     private void FixedUpdate()
@@ -47,7 +47,7 @@ public class textType : MonoBehaviour
             wave += 5;
             float value = Mathf.Sin(wave * Mathf.Deg2Rad);
             transform.localScale = Vector2.one * (0.2f *  value + 0.8f);
-            transform.localPosition = new Vector2(StartPos.x + ((0.2f * -value + 0.8f) * 0.5f), StartPos.y - ((0.2f * -value + 0.6f)* 0.5f));
+            transform.localPosition = new Vector2(StartPos.x + ((0.2f * -value + 0.8f) * 0.5f), StartPos.y - ((0.2f * -value + 0.4f)* 0.5f));
         }
     }
 }
