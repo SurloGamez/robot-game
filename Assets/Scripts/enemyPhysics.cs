@@ -2,20 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dummy : MonoBehaviour
+public class enemyPhysics : MonoBehaviour
 {
     [SerializeField] Vector2 RayAmount; // x for up and down, y for left and right
     [SerializeField] float skinWidth;
     [SerializeField] LayerMask ground;
+    [SerializeField] float Speed;
+    [SerializeField] float Friction;
     [SerializeField] float Gravity;
     public Vector2 velocity;
+    public float xinput = 0;
     Vector2 RaySpacing;
     BoxCollider2D col;
     Bounds bounds;
     bool grounded = false;
     Vector2 extraMoveAmount;
-    bool downslope = false;
-    float slopeVector = 0;
+    [HideInInspector]public bool stunned = false;
+    bool bounce = false;
+
+    float stunDuration = 0;
+
     void Start()
     {
 
@@ -26,8 +32,12 @@ public class Dummy : MonoBehaviour
 
     void FixedUpdate()
     {
+
         grounded = false;
         extraMoveAmount = Vector2.zero;
+
+        updateStunnedCounter();
+   
 
         Vector2 Add2Pos = Vector2.zero;
 
@@ -38,23 +48,49 @@ public class Dummy : MonoBehaviour
         Add2Pos += new Vector2(extraMoveAmount.x, velocity.y);
 
         origins = GetOrigins(Add2Pos);
+        UpdateXVel();
         HorizontalMovement(ref velocity, origins);
 
         transform.Translate(new Vector2(velocity.x, extraMoveAmount.y) + Add2Pos, Space.World);
+
+        if(grounded && stunned)
+        {
+            stunned = false;
+            stunDuration = 0;
+        }
     }
 
     void UpdateYVel()
     {
-        if (velocity.y > 0)
-        {
-            velocity.y -= Gravity;
-        }
-        else
-        {
-            velocity.y -= Gravity * 1.5f;
-        }
+        velocity.y -= Gravity;
 
         if (velocity.y <= -1.5) velocity.y = -1.5f;
+    }
+
+    void UpdateXVel()
+    {
+
+        if(!stunned) 
+        {
+            if(grounded)
+            {
+                xinput *= Friction;
+            }
+            else
+            {
+                xinput *= 0.96f;
+            }
+            
+        }
+
+        if(bounce)
+        {
+            xinput = -Mathf.Sign(xinput) * 2;
+            velocity.y = 0.5f;
+
+            stunDuration = 0.5f;
+        }
+        velocity.x = xinput * Speed;
     }
     public struct rayOrigins
     {
@@ -80,6 +116,7 @@ public class Dummy : MonoBehaviour
 
     void HorizontalMovement(ref Vector2 velocity, rayOrigins origins)
     {
+        bounce = false;
         if (velocity.x == 0)
         {
             return;
@@ -96,13 +133,8 @@ public class Dummy : MonoBehaviour
                 if (i == 0)
                 {
                     float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
-                    //if (slopeAngle > 80)
-                    //{
-                    //    smoothInput.x = 0;
 
-                    //}
-
-                    if (slopeAngle <= 80)
+                    if (slopeAngle <= 80 && !stunned)
                     {
                         float dist2Slope = hit.distance - skinWidth;
                         velocity.x -= dist2Slope * dir;
@@ -110,6 +142,11 @@ public class Dummy : MonoBehaviour
                         velocity.x += dist2Slope * dir;
                         return;
                     }
+                }
+
+                if (stunned)
+                {
+                    bounce = true;
                 }
 
             }
@@ -158,6 +195,7 @@ public class Dummy : MonoBehaviour
     void CheckDescendSlope(ref Vector2 velocity, rayOrigins origins)
     {
         if (velocity.y > 0 || velocity.x == 0) return;
+        if (stunned) return;
 
         float dirx = Mathf.Sign(velocity.x);
         Vector2 origin = dirx == 1 ? origins.bl : origins.br;
@@ -172,8 +210,6 @@ public class Dummy : MonoBehaviour
             velocity.y += dist2Slope;
             DescendSlope(ref velocity, slopeVec);
             velocity.y -= dist2Slope;
-            downslope = true;
-            slopeVector = Mathf.Abs(slopeVec.x);
         }
 
 
@@ -185,5 +221,26 @@ public class Dummy : MonoBehaviour
         extraMoveAmount.x = moveAmount * vec.x;
         velocity.y = moveAmount * vec.y;
     }
+
+    public void ApplyForce(Vector2 vec, float sd)
+    {
+        stunDuration = sd;
+        velocity = vec;
+        xinput = vec.x;
+    }
+    void updateStunnedCounter()
+    {
+
+        if (stunDuration > 0)
+        {
+            stunDuration-= 0.02f;
+            stunned = true;
+        }
+        else
+        {
+            stunned = false;
+        }
+    }
+
 
 }

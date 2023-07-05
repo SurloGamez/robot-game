@@ -10,6 +10,7 @@ public class customController : MonoBehaviour
     [SerializeField] LayerMask cameraLockLayer;
     [SerializeField] LayerMask ground;
     [SerializeField] LayerMask hurtLayer;
+    [SerializeField] LayerMask enemy;
     [SerializeField] float skinWidth;
     [SerializeField] Vector2 RayAmount; // x for up and down, y for left and right
     [SerializeField] float Speed;
@@ -26,6 +27,12 @@ public class customController : MonoBehaviour
     [SerializeField] GameObject explosion;
     [SerializeField] GameObject limbs;
     [SerializeField] Sprite chargeTrail;
+    [SerializeField] BoxCollider2D sideChargeCol;
+    [SerializeField] BoxCollider2D uppercutCol;
+    [SerializeField] BoxCollider2D groundPoundCol;
+    [SerializeField] Vector2 sideChargeForce;
+    [SerializeField] Vector2 uppercutForce;
+    [SerializeField] Vector2 groundSmashForce;
 
     [HideInInspector]public bool isDead;
 
@@ -56,6 +63,7 @@ public class customController : MonoBehaviour
     bool walljumped;
     int chargeCounter = 0; // if greater than 0 that means currently in attack
     Vector2 chargeDir; // for attacking sideways
+    float attackCounter = 0;
     
 
     Vector2 RaySpacing;
@@ -329,18 +337,32 @@ public class customController : MonoBehaviour
         {
             chargeCounter -= 1;
 
-            if (chargeDir == Vector2.down) groundPoundCooldown = 0.5f;
+            if (chargeDir == Vector2.down)
+            {
+                groundPoundCooldown = 0.5f;
+                cam.CameraShake(0.2f, 3);
+            }
+            
+            attackCounter = 0;
         }
 
         if (chargeCounter > 0) // during attack
         {
-            if(chargeDir.x != 0) // this means going side ways
+            attackCounter++;
+            if (chargeDir.x != 0) // this means going side ways
             {
                 /*if(chargeCounter <= 19 && chargeCounter % 2 != 0 && Mathf.Abs(velocity.x) >= 0.4f) SpawnTrail();*/ // this just makes trails
 
                 velocity = chargeDir * chargeVelocity;
                 chargeCounter -= 1;
                 chargeVelocity *= 0.95f;
+
+                if(chargeVelocity > 0.3f)
+                {
+                    checkIfHit(sideChargeCol, sideChargeForce, 0.7f);
+                }
+              
+
             }
 
             if (chargeDir == Vector2.down) // this means going down
@@ -348,15 +370,42 @@ public class customController : MonoBehaviour
                 velocity = chargeDir;
 
                 if (grounded) chargeCounter = 0;
+
+                checkIfHit(groundPoundCol, groundSmashForce, 0);
             }
 
             if (chargeDir == Vector2.up) // this means going up
             {
                 if (velocity.y <= 0) chargeCounter = 0;
                 velocity.x *= 0.95f;
+
+                if(attackCounter == 1)
+                {
+                    checkIfHit(uppercutCol, uppercutForce + new Vector2(Mathf.Abs(velocity.x * 10), 0), 0.05f);
+                }
+               
             }
           
         }
+    }
+
+    void checkIfHit(BoxCollider2D col, Vector2 force, float stundur)
+    {
+        bool shake = false;
+        Collider2D[] hit = Physics2D.OverlapBoxAll((col.offset * new Vector2(dir, 1)) + (Vector2)transform.position, col.size, 0, enemy);
+        foreach (Collider2D enemy in hit)
+        {
+
+            enemyPhysics phy = enemy.gameObject.GetComponent<enemyPhysics>();
+            if (!phy.stunned)
+            {
+                phy.ApplyForce(new Vector2(dir * force.x, force.y), stundur);
+                shake = true;
+            }
+
+        }
+
+        if(shake) cam.CameraShake(0.2f, 2);
     }
 
     void SpawnTrail()
@@ -540,7 +589,7 @@ public class customController : MonoBehaviour
             isDead = true;
             pauseMovement = true;
             sr.enabled = false;
-            cam.CameraShake();
+            cam.CameraShake(0.3f, 5);
             GameObject explosionPre = Instantiate(explosion, transform.position, transform.rotation);
             explosionPre.transform.localScale = Vector3.one * 1.25f;
             GameObject limbsPre = Instantiate(limbs, transform.position, transform.rotation);

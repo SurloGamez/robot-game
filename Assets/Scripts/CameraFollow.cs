@@ -64,17 +64,17 @@ public class CameraFollow : MonoBehaviour
     }
 
 
-    public void CameraShake()
+    public void CameraShake(float intensity, int duration)
     {
         StopAllCoroutines();
-        StartCoroutine(ScreenShake(0.015f, 0.3f));
+        StartCoroutine(ScreenShake(0.015f, intensity, duration));
     }
 
-    IEnumerator ScreenShake(float wait, float intensity)
+    IEnumerator ScreenShake(float wait, float intensity, int dur)
     {
         ShakeAmount = Vector2.zero;
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < dur; i++)
         {
             yield return new WaitForSeconds(wait);
             ShakeAmount = Vector2.up * intensity;
