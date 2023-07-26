@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class enemyPhysics : MonoBehaviour
 {
+    CameraFollow cam;
     [SerializeField] Vector2 RayAmount; // x for up and down, y for left and right
     [SerializeField] float skinWidth;
     [SerializeField] LayerMask ground;
     [SerializeField] float Speed;
     [SerializeField] float Friction;
     [SerializeField] float Gravity;
+    [SerializeField] GameObject sparks;
+    [SerializeField] GameObject explosion;
+    [SerializeField] GameObject limbs;
+    public float health = 5;
+    enemyAnimationController anim;
+    SpriteRenderer sr;
+    GameObject player;
+    int dir = 1;
     public Vector2 velocity;
     public float xinput = 0;
     Vector2 RaySpacing;
@@ -19,25 +28,35 @@ public class enemyPhysics : MonoBehaviour
     Vector2 extraMoveAmount;
     [HideInInspector]public bool stunned = false;
     bool bounce = false;
-
+    float sdconst = 10;
     float stunDuration = 0;
+    bool animgrounded = false;
+    bool pauseMovement = false;
+    bool isDead = false;
 
     void Start()
     {
-
+        
+        player = FindObjectOfType<customController>().gameObject;
+        sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<enemyAnimationController>();
         col = GetComponent<BoxCollider2D>();
         GetOrigins(Vector2.zero);
         CalculateRaySpacing();
+        cam = Camera.main.GetComponent<CameraFollow>();
+        dir = sr.flipX ? 1 :-1;
     }
 
     void FixedUpdate()
     {
 
         grounded = false;
+        
         extraMoveAmount = Vector2.zero;
 
         updateStunnedCounter();
-   
+        
+
 
         Vector2 Add2Pos = Vector2.zero;
 
@@ -51,13 +70,25 @@ public class enemyPhysics : MonoBehaviour
         UpdateXVel();
         HorizontalMovement(ref velocity, origins);
 
-        transform.Translate(new Vector2(velocity.x, extraMoveAmount.y) + Add2Pos, Space.World);
+        if(!pauseMovement) transform.Translate(new Vector2(velocity.x, extraMoveAmount.y) + Add2Pos, Space.World);
 
-        if(grounded && stunned)
+        sr.flipX = dir == 1;
+
+        if (grounded && stunned)
         {
             stunned = false;
             stunDuration = 0;
+
+            animgrounded = true;
         }
+
+        anim.UpdateAnimation(
+              stunned
+            , stunDuration
+            , animgrounded
+            );
+
+        animgrounded = grounded;
     }
 
     void UpdateYVel()
@@ -87,7 +118,7 @@ public class enemyPhysics : MonoBehaviour
         {
             xinput = -Mathf.Sign(xinput) * 2;
             velocity.y = 0.5f;
-
+            anim.ForcePlay("stun anim");
             stunDuration = 0.5f;
         }
         velocity.x = xinput * Speed;
@@ -148,6 +179,7 @@ public class enemyPhysics : MonoBehaviour
                 {
                     bounce = true;
                 }
+                bounce = true;
 
             }
 
@@ -224,9 +256,37 @@ public class enemyPhysics : MonoBehaviour
 
     public void ApplyForce(Vector2 vec, float sd)
     {
+        if (isDead) return;
+        health -= 1;
+        if(health <= 0)
+        {
+            explode();
+            return;
+        }
+        GameObject sparkClone = Instantiate(sparks, (Vector2)transform.position + (vec * 0.2f), Quaternion.Euler(0, 0, 0));
+        sparkClone.transform.localScale = Vector3.one * 0.5f;
+        Destroy(sparkClone, 0.9f);
+        cam.CameraShake(0.2f, 2);
+        sdconst = sd;
         stunDuration = sd;
+        if (sd == 0) stunDuration = 0.02f;
         velocity = vec;
         xinput = vec.x;
+        if(vec.x != 0) dir = (int)Mathf.Sign(vec.x);
+
+    }
+    void explode()
+    {
+        col.enabled = false;
+        isDead = true;
+        cam.CameraShake(0.5f, 5);
+        pauseMovement = true;
+        sr.enabled = false;
+        GameObject explosionPre = Instantiate(explosion, transform.position, transform.rotation);
+        explosionPre.transform.localScale = Vector3.one * 1f;
+        GameObject limbsPre = Instantiate(limbs, transform.position, transform.rotation);
+        Destroy(explosionPre, 0.9f);
+        Destroy(limbsPre, 3);
     }
     void updateStunnedCounter()
     {

@@ -30,9 +30,12 @@ public class customController : MonoBehaviour
     [SerializeField] BoxCollider2D sideChargeCol;
     [SerializeField] BoxCollider2D uppercutCol;
     [SerializeField] BoxCollider2D groundPoundCol;
+    [SerializeField] BoxCollider2D impactCol;
     [SerializeField] Vector2 sideChargeForce;
     [SerializeField] Vector2 uppercutForce;
-    [SerializeField] Vector2 groundSmashForce;
+    [SerializeField] Vector2 impactForce;
+    [SerializeField] GameObject slashingLine;
+    [SerializeField]ParticleSystem wallslideSpark;
 
     [HideInInspector]public bool isDead;
 
@@ -53,7 +56,6 @@ public class customController : MonoBehaviour
 
     [HideInInspector] public Vector2 velocity;
     Vector2 extraMoveAmount;
-
     [HideInInspector] public Vector2 input = new Vector2();
     [HideInInspector] public Vector2 smoothInput = new Vector2();
     int dir = 1;
@@ -64,8 +66,6 @@ public class customController : MonoBehaviour
     int chargeCounter = 0; // if greater than 0 that means currently in attack
     Vector2 chargeDir; // for attacking sideways
     float attackCounter = 0;
-    
-
     Vector2 RaySpacing;
     BoxCollider2D col;
     Bounds bounds;
@@ -81,12 +81,15 @@ public class customController : MonoBehaviour
     float wallJumpTimer = 0; //time is takes to wall jump again
     bool wallSliding = false;
     bool inwalljumpanimation = false;
-
     bool pauseMovement = false;
-
     int j, k = 0;
+    Vector2 rememberpos = Vector2.zero;
+   // int wallslideSparksCounter = 0;
+
     void Start()
     {
+        wallslideSpark.Stop();
+
         isDead = false;
         pauseMovement = false;
 
@@ -340,7 +343,8 @@ public class customController : MonoBehaviour
             if (chargeDir == Vector2.down)
             {
                 groundPoundCooldown = 0.5f;
-                cam.CameraShake(0.2f, 3);
+                checkIfHit(null, impactForce, 0, false, new Vector2(0, -1.23f), new Vector2(7, 1.7f));
+                cam.CameraShake(0.5f, 5);
             }
             
             attackCounter = 0;
@@ -359,7 +363,7 @@ public class customController : MonoBehaviour
 
                 if(chargeVelocity > 0.3f)
                 {
-                    checkIfHit(sideChargeCol, sideChargeForce, 0.7f);
+                    checkIfHit(sideChargeCol, sideChargeForce, 0.7f,true);
                 }
               
 
@@ -371,7 +375,7 @@ public class customController : MonoBehaviour
 
                 if (grounded) chargeCounter = 0;
 
-                checkIfHit(groundPoundCol, groundSmashForce, 0);
+               // checkIfHit(groundPoundCol, new Vector2(0, velocity.y), 0, false);
             }
 
             if (chargeDir == Vector2.up) // this means going up
@@ -379,9 +383,9 @@ public class customController : MonoBehaviour
                 if (velocity.y <= 0) chargeCounter = 0;
                 velocity.x *= 0.95f;
 
-                if(attackCounter == 1)
+                if(attackCounter <= 4)
                 {
-                    checkIfHit(uppercutCol, uppercutForce + new Vector2(Mathf.Abs(velocity.x * 10), 0), 0.05f);
+                    checkIfHit(uppercutCol, uppercutForce + new Vector2(Mathf.Abs(velocity.x * 10), 0), 0.1f, true);
                 }
                
             }
@@ -389,23 +393,39 @@ public class customController : MonoBehaviour
         }
     }
 
-    void checkIfHit(BoxCollider2D col, Vector2 force, float stundur)
+    void checkIfHit(BoxCollider2D col, Vector2 force, float stundur, bool doSlashLine, Vector2 customOffset = new Vector2(), Vector2 customSize = new Vector2())
     {
-        bool shake = false;
-        Collider2D[] hit = Physics2D.OverlapBoxAll((col.offset * new Vector2(dir, 1)) + (Vector2)transform.position, col.size, 0, enemy);
+        Collider2D[] hit;
+        if (col)
+        {
+            hit = Physics2D.OverlapBoxAll((col.offset * new Vector2(dir, 1)) + (Vector2)transform.position, col.size, 0, enemy);
+        }
+        else
+        {
+            hit = Physics2D.OverlapBoxAll((customOffset * new Vector2(dir, 1)) + (Vector2)transform.position, customSize, 0, enemy);
+        }
+       
         foreach (Collider2D enemy in hit)
         {
 
             enemyPhysics phy = enemy.gameObject.GetComponent<enemyPhysics>();
             if (!phy.stunned)
             {
+                if(doSlashLine)
+                {
+                    Vector2 diff = new Vector2(dir * force.x, force.y);
+                    //Vector2 diff = enemy.gameObject.transform.position - transform.position;
+                    float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+                    GameObject slash = Instantiate(slashingLine, transform.position, Quaternion.Euler(0, 0, angle));
+                    Destroy(slash, 0.9f);
+                }
+              
+
                 phy.ApplyForce(new Vector2(dir * force.x, force.y), stundur);
-                shake = true;
             }
 
         }
 
-        if(shake) cam.CameraShake(0.2f, 2);
     }
 
     void SpawnTrail()
@@ -550,14 +570,37 @@ public class customController : MonoBehaviour
         if (topleft && Mathf.Abs(topleft.normal.y) <= 0.05f /*|| bottomleft*/) { wallJumpDir = 1; walled = true; }
         else if (topright && Mathf.Abs(topright.normal.y) <= 0.05f /*|| bottomright*/) { wallJumpDir = -1; walled = true; }
 
+
+        if (walled && input.x != wallJumpDir /*&& velocity.y <= -0.1f*/)//create sparks
+        {
+            if (!wallslideSpark.isPlaying) 
+            {
+                Vector3 sparkspos = wallslideSpark.gameObject.transform.position;
+                wallslideSpark.gameObject.transform.position = new Vector3(sparkspos.x * dir, sparkspos.y, sparkspos.z);
+                wallslideSpark.gameObject.transform.rotation = Quaternion.Euler(dir == 1 ? -120 : -60, 90, 0);
+
+                wallslideSpark.Play();
+            }
+           // print(wallslideSpark.isPlaying);
+        }
+        else
+        {
+            if(wallslideSpark.isPlaying)
+            {
+                wallslideSpark.Stop();
+                print("stop");
+            }
+        }
+
+
+
         if (walled && wallJumpDir == input.x)
         {
-            
             walled = false;
             rolling = false;
         }
 
-         
+
     }
 
     void ClimbSlope(ref Vector2 velocity, float angle)
@@ -591,7 +634,7 @@ public class customController : MonoBehaviour
             sr.enabled = false;
             cam.CameraShake(0.3f, 5);
             GameObject explosionPre = Instantiate(explosion, transform.position, transform.rotation);
-            explosionPre.transform.localScale = Vector3.one * 1.25f;
+           // explosionPre.transform.localScale = Vector3.one;
             GameObject limbsPre = Instantiate(limbs, transform.position, transform.rotation);
             Destroy(explosionPre, 0.9f);
             Destroy(limbsPre, 3);
@@ -620,7 +663,7 @@ public class customController : MonoBehaviour
         uppercutcd = 0;
         groundPoundcd = 0;
         groundPoundCooldown = 0;
-        chargeCounter = 0;
+        chargeCounter = -1;
         extraMoveAmount = Vector2.zero;
         anim.Reset();
         sr.enabled = true;
@@ -652,7 +695,7 @@ public class customController : MonoBehaviour
 
             
         }
-        else
+        else //if in camera lock zone
         {
             j = 0;
             k++;
@@ -661,10 +704,17 @@ public class customController : MonoBehaviour
                 BoxCollider2D box = hit.gameObject.GetComponent<BoxCollider2D>();
                 Vector2 size = box.size;
                 Vector2 pos = box.offset + (Vector2)hit.gameObject.transform.position;
-                cam.followPos = pos;
+                rememberpos = pos;
+               
                 cam.targetZoomAmount = size.x / 3.5f;
                 cam.inLock = true;
             }
+            if(k > 1)
+            {
+                cam.followPos = rememberpos + (((Vector2)transform.position - rememberpos) * 0.3f);
+            }
+            
+
         }
         
        

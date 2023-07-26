@@ -6345,7 +6345,7 @@ Tilemap:
       - {fileID: 763273561, guid: 7cc7c20db06ac874db6d4a8d5874a1e0, type: 3}
       - {fileID: 559904701, guid: 7cc7c20db06ac874db6d4a8d5874a1e0, type: 3}
       - {fileID: 1060152150, guid: 7cc7c20db06ac874db6d4a8d5874a1e0, type: 3}
-      m_AnimationSpeed: 30
+      m_AnimationSpeed: 30.000002
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: -1, y: 6, z: 0}
@@ -6852,7 +6852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainIndex: 3
   main: {fileID: 1338770844}
-  color: {r: 0.49061054, g: 0.56431276, b: 0.5943396, a: 1}
+  color: {r: 0.48235294, g: 0.54901963, b: 0.5764706, a: 1}
   parallaxMultiplier: 0.0125
   material: {fileID: 2100000, guid: 9a81217e7a828b2498207964b634dcd6, type: 2}
   numberOfLayers: 6
