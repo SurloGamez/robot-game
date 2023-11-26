@@ -30,7 +30,6 @@ public class customController : MonoBehaviour
     [SerializeField] BoxCollider2D sideChargeCol;
     [SerializeField] BoxCollider2D uppercutCol;
     [SerializeField] BoxCollider2D groundPoundCol;
-    [SerializeField] BoxCollider2D impactCol;
     [SerializeField] Vector2 sideChargeForce;
     [SerializeField] Vector2 uppercutForce;
     [SerializeField] Vector2 impactForce;
@@ -84,10 +83,12 @@ public class customController : MonoBehaviour
     bool pauseMovement = false;
     int j, k = 0;
     Vector2 rememberpos = Vector2.zero;
+    Vector3 rememberSparkPos;
    // int wallslideSparksCounter = 0;
 
     void Start()
     {
+        rememberSparkPos = wallslideSpark.gameObject.transform.localPosition;
         wallslideSpark.Stop();
 
         isDead = false;
@@ -142,9 +143,7 @@ public class customController : MonoBehaviour
         HorizontalMovement(ref velocity, origins);
         if(!pauseMovement) transform.Translate(new Vector2(velocity.x, extraMoveAmount.y) + Add2Pos, Space.World);
 
-        if (velocity.x > 0.03f) dir = 1;
-        if (velocity.x < -0.03f) dir = -1;
-        sr.flipX = dir == -1;
+       
 
         walljumped = false;
         if (wallJumpcontrolcd > 0) wallJumpcontrolcd -= 0.02f;
@@ -198,6 +197,10 @@ public class customController : MonoBehaviour
         CheckAttack();
         UpdateUI();
         CheckTouchingDeath(col.offset + (Vector2)transform.position, col.size);
+
+        if (velocity.x > 0.03f) dir = 1;
+        if (velocity.x < -0.03f) dir = -1;
+        sr.flipX = dir == -1;
 
         anim.UpdateAnimation(
             Mathf.Abs(velocity.x) > 0.05f
@@ -302,6 +305,7 @@ public class customController : MonoBehaviour
 
         if (attackButtonCounter == 1 && chargeCounter <= 0) // this means this is the first frame attack button is pressed (get the attack key down)
         {
+
             bool endAttack = true;
 
             if (input.y > 0 && uppercutcd <= 0) //uppercut
@@ -344,7 +348,7 @@ public class customController : MonoBehaviour
             {
                 groundPoundCooldown = 0.5f;
                 checkIfHit(null, impactForce, 0, false, new Vector2(0, -1.23f), new Vector2(7, 1.7f));
-                cam.CameraShake(0.5f, 5);
+                cam.CameraShake(0.3f, 5);
             }
             
             attackCounter = 0;
@@ -517,7 +521,6 @@ public class customController : MonoBehaviour
         velocity.y = moveAmount * vec.y;
     }
 
-
     void HorizontalMovement(ref Vector2 velocity, rayOrigins origins)
     {
         if (velocity.x == 0)
@@ -571,24 +574,21 @@ public class customController : MonoBehaviour
         else if (topright && Mathf.Abs(topright.normal.y) <= 0.05f /*|| bottomright*/) { wallJumpDir = -1; walled = true; }
 
 
-        if (walled && input.x != wallJumpDir /*&& velocity.y <= -0.1f*/)//create sparks
+        if (walled && input.x != wallJumpDir && velocity.y <= -0.1f && chargeCounter <= 0)//create sparks
         {
             if (!wallslideSpark.isPlaying) 
             {
-                Vector3 sparkspos = wallslideSpark.gameObject.transform.position;
-                wallslideSpark.gameObject.transform.position = new Vector3(sparkspos.x * dir, sparkspos.y, sparkspos.z);
+                wallslideSpark.gameObject.transform.localPosition = new Vector3(rememberSparkPos.x * dir, rememberSparkPos.y, rememberSparkPos.z);
                 wallslideSpark.gameObject.transform.rotation = Quaternion.Euler(dir == 1 ? -120 : -60, 90, 0);
 
                 wallslideSpark.Play();
             }
-           // print(wallslideSpark.isPlaying);
         }
         else
         {
             if(wallslideSpark.isPlaying)
             {
                 wallslideSpark.Stop();
-                print("stop");
             }
         }
 

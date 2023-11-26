@@ -1438,15 +1438,13 @@ MonoBehaviour:
   Dialogues:
   - text: ...
     wait: 3
-  - text: Finally...
+  - text: Another one has woke up from~ hibernation
     wait: 2
-  - text: Another subject has awaken from~ hibernation
-    wait: 2
-  - text: You are trained to become a# deadly/ robot soldier
+  - text: Let's hope you are not as foolish as the previous subjects
     wait: 2
   - text: Just going to run some tests before you can serve the military
     wait: 2
-  - text: There is no need to think
+  - text: Remember... There is no need to think
     wait: 2
   - text: For all the decisions are already made
     wait: 2
@@ -5281,7 +5279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &552286422
 Transform:
   m_ObjectHideFlags: 0
@@ -17004,7 +17002,7 @@ Tilemap:
       - {fileID: 763273561, guid: 7cc7c20db06ac874db6d4a8d5874a1e0, type: 3}
       - {fileID: 559904701, guid: 7cc7c20db06ac874db6d4a8d5874a1e0, type: 3}
       - {fileID: 1060152150, guid: 7cc7c20db06ac874db6d4a8d5874a1e0, type: 3}
-      m_AnimationSpeed: 30
+      m_AnimationSpeed: 30.000002
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: 14, y: 6, z: 0}

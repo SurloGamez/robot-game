@@ -5,6 +5,7 @@ using UnityEngine;
 public class enemyPhysics : MonoBehaviour
 {
     CameraFollow cam;
+    [SerializeField] LayerMask hurtLayer;
     [SerializeField] Vector2 RayAmount; // x for up and down, y for left and right
     [SerializeField] float skinWidth;
     [SerializeField] LayerMask ground;
@@ -82,6 +83,8 @@ public class enemyPhysics : MonoBehaviour
             animgrounded = true;
         }
 
+        CheckTouchingDeath(col.offset + (Vector2)transform.position, col.size);
+
         anim.UpdateAnimation(
               stunned
             , stunDuration
@@ -114,11 +117,11 @@ public class enemyPhysics : MonoBehaviour
             
         }
 
-        if(bounce)
+        if (bounce)
         {
             xinput = -Mathf.Sign(xinput) * 2;
-            velocity.y = 0.5f;
-            anim.ForcePlay("stun anim");
+            velocity.y = 0.4f;
+            //anim.ForcePlay("stun anim");
             stunDuration = 0.5f;
         }
         velocity.x = xinput * Speed;
@@ -299,6 +302,28 @@ public class enemyPhysics : MonoBehaviour
         else
         {
             stunned = false;
+        }
+    }
+
+    void CheckTouchingDeath(Vector2 origin, Vector2 size)
+    {
+        Collider2D col = Physics2D.OverlapBox(origin, size, 0, hurtLayer);
+        if (col != null && !pauseMovement)
+        {
+            health = 0;
+            isDead = true;
+            pauseMovement = true;
+            sr.enabled = false;
+            if(Vector2.Distance(player.transform.position, transform.position) < 20)
+            {
+                cam.CameraShake(0.3f, 5);
+            }
+           
+            GameObject explosionPre = Instantiate(explosion, transform.position, transform.rotation);
+            // explosionPre.transform.localScale = Vector3.one;
+            GameObject limbsPre = Instantiate(limbs, transform.position, transform.rotation);
+            Destroy(explosionPre, 0.9f);
+            Destroy(limbsPre, 3);
         }
     }
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ebc574382fd2bc54fb0aafc6e5fb2d12
+guid: ab28cd282fb683a4d807c67f88d47e42
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,43 +116,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: screen effect_0
+      name: buttons_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 100
-        height: 75
+        x: 13
+        y: 13
+        width: 14
+        height: 14
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0335faf602428a74e91e2ccb71f843d0
-      internalID: 1643931425
+      spriteID: 45b9409ba78e24947a0af981471ab4e0
+      internalID: -1224206215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: screen effect_1
+      name: buttons_1
       rect:
         serializedVersion: 2
-        x: 100
-        y: 0
-        width: 100
-        height: 75
+        x: 53
+        y: 13
+        width: 14
+        height: 14
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 546435c6369460d44b69bf408a2a06c3
-      internalID: 384792414
+      spriteID: e5273541ff25cce448dcde4af12221f7
+      internalID: -862388494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: buttons_2
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 13
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1953802b50e718e47a0c72a23fd9cf96
+      internalID: -543715936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: buttons_3
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 13
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1208e0d8bb96b4045ad1a43921711004
+      internalID: -1596948115
       vertices: []
       indices: 
       edges: []
@@ -168,8 +210,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      screen effect_0: 1643931425
-      screen effect_1: 384792414
+      buttons_2: -543715936
+      buttons_0: -1224206215
+      buttons_1: -862388494
+      buttons_3: -1596948115
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
